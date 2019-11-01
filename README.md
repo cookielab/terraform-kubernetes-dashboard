@@ -6,11 +6,12 @@ This module deploys [Kubernetes Dashboard](https://github.com/kubernetes/dashboa
 
 ```terraform
 provider "kubernetes" {
-  config_path = "../1-master/kubeconfig_kube-first"
+  # your kubernetes provider config
 }
 
 module "kubernetes_dashboard" {
-  source = "git::https://github.com/cookielab/tf-kube-module-kubernetes-dashboard.git?ref=0.9.0"
+  source = "cookielab/dashboard/kubernetes"
+  version = "0.9.0"
 
   kubernetes_namespace_create = true
   kubernetes_dashboard_csrf = "<your-csrf-random-string>"
