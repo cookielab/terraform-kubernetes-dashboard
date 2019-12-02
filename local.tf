@@ -1,15 +1,17 @@
 locals {
   kubernetes_resources_labels = merge({
-    "cookielab.io/terraform-module" = "aws-kube-dashboard",
+    "cookielab.io/terraform-module" = "kube-dashboard",
   }, var.kubernetes_resources_labels)
 
   kubernetes_deployment_labels_selector = {
-    "cookielab.io/deployment" = "aws-kube-dashboard-tf-module",
+    "cookielab.io/application" = "kubernetes-dashboard",
+    "cookielab.io/process" = "bootstrap",
     "cookielab.io/unit" = "dashboard",
   }
 
   kubernetes_deployment_labels_selector_metrics = {
-    "cookielab.io/deployment" = "aws-kube-dashboard-tf-module",
+    "cookielab.io/application" = "kubernetes-dashboard",
+    "cookielab.io/process" = "bootstrap",
     "cookielab.io/unit" = "metrics-scraper",
   }
 
