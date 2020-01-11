@@ -29,7 +29,7 @@ variable "kubernetes_deployment_image_registry" {
 
 variable "kubernetes_deployment_image_tag" {
   type = string
-  default = "v2.0.0-beta8"
+  default = "v2.0.0-rc1"
 }
 
 variable "kubernetes_deployment_metrics_scraper_image_registry" {
@@ -39,7 +39,7 @@ variable "kubernetes_deployment_metrics_scraper_image_registry" {
 
 variable "kubernetes_deployment_metrics_scraper_image_tag" {
   type = string
-  default = "v1.0.1"
+  default = "v1.0.2"
 }
 
 variable "kubernetes_deployment_node_selector" {
