@@ -29,7 +29,7 @@ variable "kubernetes_deployment_image_registry" {
 
 variable "kubernetes_deployment_image_tag" {
   type = string
-  default = "v2.0.0-rc1"
+  default = "v2.0.0-rc6"
 }
 
 variable "kubernetes_deployment_metrics_scraper_image_registry" {
