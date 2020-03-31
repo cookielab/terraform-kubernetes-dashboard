@@ -50,6 +50,24 @@ variable "kubernetes_deployment_node_selector" {
   description = "Node selectors for kubernetes deployment"
 }
 
+variable "kubernetes_deployment_tolerations" {
+  type = list(object({
+    key = string
+    operator = string
+    value = string
+    effect = string
+  }))
+
+  default = [
+    {
+      key = "node-role.kubernetes.io/master"
+      operator = "Equal"
+      value = ""
+      effect = "NoSchedule"
+    }
+  ]
+}
+
 variable "kubernetes_service_account_name" {
   type = string
   default = "kubernetes-dashboard"

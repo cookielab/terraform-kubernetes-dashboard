@@ -259,9 +259,14 @@ resource "kubernetes_deployment" "kubernetes_dashboard" {
 
         node_selector = var.kubernetes_deployment_node_selector
 
-        toleration {
-          key = "node-role.kubernetes.io/master"
-          effect = "NoSchedule"
+        dynamic toleration {
+          for_each = var.kubernetes_deployment_tolerations
+          content {
+            key      = toleration.value.key
+            operator = toleration.value.operator
+            value    = toleration.value.value
+            effect   = toleration.value.effect
+          }
         }
       }
     }
@@ -336,9 +341,14 @@ resource "kubernetes_deployment" "kubernetes_metrics_scraper" {
 
         node_selector = var.kubernetes_deployment_node_selector
 
-        toleration {
-          key = "node-role.kubernetes.io/master"
-          effect = "NoSchedule"
+        dynamic toleration {
+          for_each = var.kubernetes_deployment_tolerations
+          content {
+            key      = toleration.value.key
+            operator = toleration.value.operator
+            value    = toleration.value.value
+            effect   = toleration.value.effect
+          }
         }
       }
     }
