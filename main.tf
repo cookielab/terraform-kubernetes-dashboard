@@ -7,6 +7,7 @@ resource "kubernetes_namespace" "kubernetes_dashboard" {
 }
 
 resource "kubernetes_service_account" "kubernetes_dashboard" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     namespace = var.kubernetes_namespace
@@ -15,6 +16,7 @@ resource "kubernetes_service_account" "kubernetes_dashboard" {
 }
 
 resource "kubernetes_secret" "kubernetes_dashboard_certs" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "kubernetes-dashboard-certs"
     namespace = var.kubernetes_namespace
@@ -31,6 +33,7 @@ resource "kubernetes_secret" "kubernetes_dashboard_certs" {
 }
 
 resource "kubernetes_secret" "kubernetes_dashboard_csrf" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "kubernetes-dashboard-csrf"
     namespace = var.kubernetes_namespace
@@ -45,6 +48,7 @@ resource "kubernetes_secret" "kubernetes_dashboard_csrf" {
 }
 
 resource "kubernetes_secret" "kubernetes_dashboard_key_holder" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "kubernetes-dashboard-key-holder"
     namespace = var.kubernetes_namespace
@@ -60,6 +64,7 @@ resource "kubernetes_secret" "kubernetes_dashboard_key_holder" {
 }
 
 resource "kubernetes_config_map" "kubernetes_dashboard_settings" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "kubernetes-dashboard-settings"
     namespace = var.kubernetes_namespace
@@ -74,6 +79,7 @@ resource "kubernetes_config_map" "kubernetes_dashboard_settings" {
 }
 
 resource "kubernetes_role" "kubernetes_dashboard" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     namespace = var.kubernetes_namespace
@@ -123,6 +129,7 @@ resource "kubernetes_role" "kubernetes_dashboard" {
 }
 
 resource "kubernetes_role_binding" "kubernetes_dashboard" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     namespace = var.kubernetes_namespace
@@ -175,6 +182,7 @@ resource "kubernetes_cluster_role_binding" "kubernetes_dashboard" {
 }
 
 resource "kubernetes_deployment" "kubernetes_dashboard" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     namespace = var.kubernetes_namespace
@@ -274,6 +282,7 @@ resource "kubernetes_deployment" "kubernetes_dashboard" {
 }
 
 resource "kubernetes_deployment" "kubernetes_metrics_scraper" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "${var.kubernetes_resources_name_prefix}kubernetes-metrics-scraper"
     namespace = var.kubernetes_namespace
@@ -356,6 +365,7 @@ resource "kubernetes_deployment" "kubernetes_metrics_scraper" {
 }
 
 resource "kubernetes_service" "kubernetes_dashboard" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     namespace = var.kubernetes_namespace
@@ -373,6 +383,7 @@ resource "kubernetes_service" "kubernetes_dashboard" {
 }
 
 resource "kubernetes_service" "kubernetes_metrics_scraper" {
+  depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
     name = "${var.kubernetes_resources_name_prefix}dashboard-metrics-scraper"
     namespace = var.kubernetes_namespace
