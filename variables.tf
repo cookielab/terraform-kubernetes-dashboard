@@ -29,7 +29,7 @@ variable "kubernetes_deployment_image_registry" {
 
 variable "kubernetes_deployment_image_tag" {
   type = string
-  default = "v2.0.0-rc6"
+  default = "v2.1.0"
 }
 
 variable "kubernetes_deployment_metrics_scraper_image_registry" {
@@ -39,13 +39,13 @@ variable "kubernetes_deployment_metrics_scraper_image_registry" {
 
 variable "kubernetes_deployment_metrics_scraper_image_tag" {
   type = string
-  default = "v1.0.3"
+  default = "v1.0.6"
 }
 
 variable "kubernetes_deployment_node_selector" {
   type = map(string)
   default = {
-    "beta.kubernetes.io/os" = "linux"
+    "kubernetes.io/os" = "linux"
   }
   description = "Node selectors for kubernetes deployment"
 }
