@@ -9,18 +9,18 @@ resource "kubernetes_namespace" "kubernetes_dashboard" {
 resource "kubernetes_service_account" "kubernetes_dashboard" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
+    name      = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     namespace = var.kubernetes_namespace
-    labels = local.kubernetes_resources_labels
+    labels    = local.kubernetes_resources_labels
   }
 }
 
 resource "kubernetes_secret" "kubernetes_dashboard_certs" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "kubernetes-dashboard-certs"
+    name      = "kubernetes-dashboard-certs"
     namespace = var.kubernetes_namespace
-    labels = local.kubernetes_resources_labels
+    labels    = local.kubernetes_resources_labels
   }
 
   type = "Opaque"
@@ -35,9 +35,9 @@ resource "kubernetes_secret" "kubernetes_dashboard_certs" {
 resource "kubernetes_secret" "kubernetes_dashboard_csrf" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "kubernetes-dashboard-csrf"
+    name      = "kubernetes-dashboard-csrf"
     namespace = var.kubernetes_namespace
-    labels = local.kubernetes_resources_labels
+    labels    = local.kubernetes_resources_labels
   }
 
   type = "Opaque"
@@ -50,7 +50,7 @@ resource "kubernetes_secret" "kubernetes_dashboard_csrf" {
 resource "kubernetes_secret" "kubernetes_dashboard_key_holder" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "kubernetes-dashboard-key-holder"
+    name      = "kubernetes-dashboard-key-holder"
     namespace = var.kubernetes_namespace
   }
 
@@ -66,9 +66,9 @@ resource "kubernetes_secret" "kubernetes_dashboard_key_holder" {
 resource "kubernetes_config_map" "kubernetes_dashboard_settings" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "kubernetes-dashboard-settings"
+    name      = "kubernetes-dashboard-settings"
     namespace = var.kubernetes_namespace
-    labels = local.kubernetes_resources_labels
+    labels    = local.kubernetes_resources_labels
   }
 
   lifecycle {
@@ -81,14 +81,14 @@ resource "kubernetes_config_map" "kubernetes_dashboard_settings" {
 resource "kubernetes_role" "kubernetes_dashboard" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
+    name      = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     namespace = var.kubernetes_namespace
-    labels = local.kubernetes_resources_labels
+    labels    = local.kubernetes_resources_labels
   }
 
   rule {
     api_groups = [""]
-    resources = ["secrets"]
+    resources  = ["secrets"]
     resource_names = [
       kubernetes_secret.kubernetes_dashboard_key_holder.metadata.0.name,
       kubernetes_secret.kubernetes_dashboard_certs.metadata.0.name,
@@ -98,15 +98,15 @@ resource "kubernetes_role" "kubernetes_dashboard" {
   }
 
   rule {
-    api_groups = [""]
-    resources = ["configmaps"]
+    api_groups     = [""]
+    resources      = ["configmaps"]
     resource_names = [kubernetes_config_map.kubernetes_dashboard_settings.metadata.0.name]
-    verbs = ["get", "update"]
+    verbs          = ["get", "update"]
   }
 
   rule {
     api_groups = [""]
-    resources = ["services"]
+    resources  = ["services"]
     resource_names = [
       "heapster",
       kubernetes_service.kubernetes_metrics_scraper.metadata.0.name,
@@ -116,7 +116,7 @@ resource "kubernetes_role" "kubernetes_dashboard" {
 
   rule {
     api_groups = [""]
-    resources = ["services/proxy"]
+    resources  = ["services/proxy"]
     resource_names = [
       "heapster",
       "http:heapster:",
@@ -131,52 +131,52 @@ resource "kubernetes_role" "kubernetes_dashboard" {
 resource "kubernetes_role_binding" "kubernetes_dashboard" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
+    name      = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     namespace = var.kubernetes_namespace
-    labels = local.kubernetes_resources_labels
+    labels    = local.kubernetes_resources_labels
   }
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    kind = "Role"
-    name = kubernetes_role.kubernetes_dashboard.metadata.0.name
+    kind      = "Role"
+    name      = kubernetes_role.kubernetes_dashboard.metadata.0.name
   }
 
   subject {
-    kind = "ServiceAccount"
-    name = kubernetes_service_account.kubernetes_dashboard.metadata.0.name
+    kind      = "ServiceAccount"
+    name      = kubernetes_service_account.kubernetes_dashboard.metadata.0.name
     namespace = kubernetes_service_account.kubernetes_dashboard.metadata.0.namespace
   }
 }
 
 resource "kubernetes_cluster_role" "kubernetes_dashboard" {
   metadata {
-    name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
+    name   = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     labels = local.kubernetes_resources_labels
   }
 
   rule {
     api_groups = ["metrics.k8s.io"]
-    resources = ["pods", "nodes"]
-    verbs = ["get", "list", "watch"]
+    resources  = ["pods", "nodes"]
+    verbs      = ["get", "list", "watch"]
   }
 }
 
 resource "kubernetes_cluster_role_binding" "kubernetes_dashboard" {
   metadata {
-    name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
+    name   = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     labels = local.kubernetes_resources_labels
   }
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    kind = "ClusterRole"
-    name = kubernetes_cluster_role.kubernetes_dashboard.metadata.0.name
+    kind      = "ClusterRole"
+    name      = kubernetes_cluster_role.kubernetes_dashboard.metadata.0.name
   }
 
   subject {
-    kind = "ServiceAccount"
-    name = kubernetes_service_account.kubernetes_dashboard.metadata.0.name
+    kind      = "ServiceAccount"
+    name      = kubernetes_service_account.kubernetes_dashboard.metadata.0.name
     namespace = kubernetes_service_account.kubernetes_dashboard.metadata.0.namespace
   }
 }
@@ -184,13 +184,13 @@ resource "kubernetes_cluster_role_binding" "kubernetes_dashboard" {
 resource "kubernetes_deployment" "kubernetes_dashboard" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
+    name      = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     namespace = var.kubernetes_namespace
-    labels = local.kubernetes_resources_labels
+    labels    = local.kubernetes_resources_labels
   }
 
   spec {
-    replicas = 1
+    replicas               = 1
     revision_history_limit = 10
 
     selector {
@@ -203,49 +203,47 @@ resource "kubernetes_deployment" "kubernetes_dashboard" {
       }
 
       spec {
-        service_account_name = kubernetes_service_account.kubernetes_dashboard.metadata.0.name
+        service_account_name            = kubernetes_service_account.kubernetes_dashboard.metadata.0.name
         automount_service_account_token = true
 
         container {
           image = local.kubernetes_deployment_image
-          name = "kubernetes-dashboard"
+          name  = "kubernetes-dashboard"
 
-          args = [
-            "--auto-generate-certificates",
-            "--namespace=${var.kubernetes_namespace}",
-          ]
+          args = distinct(concat(["--namespace=${var.kubernetes_namespace}"], var.kubernetes_dashboard_deployment_args))
+
 
           port {
             container_port = 8443
-            protocol = "TCP"
+            protocol       = "TCP"
           }
 
           volume_mount {
-            name = "kubernetes-dashboard-certs"
+            name       = "kubernetes-dashboard-certs"
             mount_path = "/certs"
           }
 
           volume_mount {
-            name = "tmp-volume"
+            name       = "tmp-volume"
             mount_path = "/tmp"
           }
 
           liveness_probe {
             http_get {
               scheme = "HTTPS"
-              path = "/"
-              port = 8443
+              path   = "/"
+              port   = 8443
             }
 
             initial_delay_seconds = 30
-            timeout_seconds = 30
+            timeout_seconds       = 30
           }
 
           security_context {
             allow_privilege_escalation = false
-            read_only_root_filesystem = true
-            run_as_user = 1001
-            run_as_group = 2001
+            read_only_root_filesystem  = true
+            run_as_user                = 1001
+            run_as_group               = 2001
           }
 
           image_pull_policy = "Always"
@@ -284,13 +282,13 @@ resource "kubernetes_deployment" "kubernetes_dashboard" {
 resource "kubernetes_deployment" "kubernetes_metrics_scraper" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "${var.kubernetes_resources_name_prefix}kubernetes-metrics-scraper"
+    name      = "${var.kubernetes_resources_name_prefix}kubernetes-metrics-scraper"
     namespace = var.kubernetes_namespace
-    labels = local.kubernetes_resources_labels
+    labels    = local.kubernetes_resources_labels
   }
 
   spec {
-    replicas = 1
+    replicas               = 1
     revision_history_limit = 10
 
     selector {
@@ -303,39 +301,39 @@ resource "kubernetes_deployment" "kubernetes_metrics_scraper" {
       }
 
       spec {
-        service_account_name = kubernetes_service_account.kubernetes_dashboard.metadata.0.name
+        service_account_name            = kubernetes_service_account.kubernetes_dashboard.metadata.0.name
         automount_service_account_token = true
 
         container {
           image = local.kubernetes_deployment_metrics_scraper_image
-          name = "kubernetes-metrics-scraper"
+          name  = "kubernetes-metrics-scraper"
 
           port {
             container_port = 8000
-            protocol = "TCP"
+            protocol       = "TCP"
           }
 
           volume_mount {
-            name = "tmp-volume"
+            name       = "tmp-volume"
             mount_path = "/tmp"
           }
 
           liveness_probe {
             http_get {
               scheme = "HTTP"
-              path = "/"
-              port = 8000
+              path   = "/"
+              port   = 8000
             }
 
             initial_delay_seconds = 30
-            timeout_seconds = 30
+            timeout_seconds       = 30
           }
 
           security_context {
             allow_privilege_escalation = false
-            read_only_root_filesystem = true
-            run_as_user = 1001
-            run_as_group = 2001
+            read_only_root_filesystem  = true
+            run_as_user                = 1001
+            run_as_group               = 2001
           }
 
           image_pull_policy = "Always"
@@ -367,16 +365,16 @@ resource "kubernetes_deployment" "kubernetes_metrics_scraper" {
 resource "kubernetes_service" "kubernetes_dashboard" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
+    name      = "${var.kubernetes_resources_name_prefix}kubernetes-dashboard"
     namespace = var.kubernetes_namespace
-    labels = local.kubernetes_resources_labels
+    labels    = local.kubernetes_resources_labels
   }
 
   spec {
     selector = local.kubernetes_deployment_labels_selector
 
     port {
-      port = 443
+      port        = 443
       target_port = 8443
     }
   }
@@ -385,16 +383,16 @@ resource "kubernetes_service" "kubernetes_dashboard" {
 resource "kubernetes_service" "kubernetes_metrics_scraper" {
   depends_on = [kubernetes_namespace.kubernetes_dashboard]
   metadata {
-    name = "${var.kubernetes_resources_name_prefix}dashboard-metrics-scraper"
+    name      = "${var.kubernetes_resources_name_prefix}dashboard-metrics-scraper"
     namespace = var.kubernetes_namespace
-    labels = local.kubernetes_resources_labels
+    labels    = local.kubernetes_resources_labels
   }
 
   spec {
     selector = local.kubernetes_deployment_labels_selector_metrics
 
     port {
-      port = 8000
+      port        = 8000
       target_port = 8000
     }
   }
