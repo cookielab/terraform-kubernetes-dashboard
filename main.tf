@@ -210,10 +210,7 @@ resource "kubernetes_deployment" "kubernetes_dashboard" {
           image = local.kubernetes_deployment_image
           name = "kubernetes-dashboard"
 
-          args = [
-            "--auto-generate-certificates",
-            "--namespace=${var.kubernetes_namespace}",
-          ]
+          args = distinct(concat(["--namespace=${var.kubernetes_namespace}"], var.kubernetes_dashboard_deployment_args))
 
           port {
             container_port = 8443

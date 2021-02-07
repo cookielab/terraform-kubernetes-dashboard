@@ -98,6 +98,14 @@ variable "kubernetes_deployment_name" {
   description = "Kubernetes deployment name."
 }
 
+variable "kubernetes_dashboard_deployment_args" {
+  type = list(string)
+  default = [
+    "--auto-generate-certificates",
+  ]
+  description = "Kubernetes deployment args."
+}
+
 variable "kubernetes_service_name" {
   type = string
   default = "kubernetes-dashboard"
