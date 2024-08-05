@@ -1,5 +1,8 @@
 # Terraform module for Kubernetes Dashboard
 
+> [!WARNING]  
+> This module is no longer maintained.
+
 This module deploys [Kubernetes Dashboard](https://github.com/kubernetes/dashboard) to your Kubernetes cluster.
 
 ## Usage
